@@ -1,0 +1,17 @@
+{
+  "name": "ass_1",
+  "version": "1.0.0",
+  "description": "This is a RESTful API built with Express.js for managing products. The API provides full CRUD (Create, Read, Update, Delete) functionality for product data, which is stored in a JSON file. Each product has an id, name, and price. The server also includes utility endpoints for testing server status and connectivity.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
