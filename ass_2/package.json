@@ -1,0 +1,28 @@
+{
+  "name": "weather-location-dashboard",
+  "version": "1.0.0",
+  "description": "A server-side API integration project that fetches weather data from OpenWeather API and news from NewsAPI, displaying them in a responsive web interface.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "weather",
+    "api",
+    "express",
+    "nodejs",
+    "openweather",
+    "newsapi"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container header-content">
+        <h1>Weather </h1>
+        <p>Search any city to see live weather and country details.</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="search-section">
+        <form id="search-form">
+          <label for="city-input" class="sr-only">City name</label>
+          <input
+            id="city-input"
+            type="text"
+            placeholder="Enter a city name"
+            autocomplete="off"
+            required
+          />
+          <button type="submit">Get Weather</button>
+        </form>
+        
+      </section>
+
+      <section id="status" aria-live="polite"></section>
+
+      <section id="results" class="results-grid" hidden>
+        <article class="card" id="weather-card">
+          <h2>Current Weather</h2>
+          <div class="card-body">
+            <p class="city-name" id="city-name"></p>
+            <p class="temperature" id="temperature"></p>
+            <p id="description"></p>
+            <dl class="data-list">
+              <div>
+                <dt>Feels like</dt>
+                <dd id="feels-like"></dd>
+              </div>
+              <div>
+                <dt>Wind speed</dt>
+                <dd id="wind-speed"></dd>
+              </div>
+              <div>
+                <dt>Coordinates</dt>
+                <dd id="coordinates"></dd>
+              </div>
+              <div>
+                <dt>Rain (last 3h)</dt>
+                <dd id="rain-volume"></dd>
+              </div>
+              <div>
+                <dt>Country code</dt>
+                <dd id="country-code"></dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+
+        <article class="card" id="country-card">
+          <h2>Country Details</h2>
+          <div class="card-body" id="country-content">
+            <p id="country-name"></p>
+            <p id="country-capital"></p>
+            <p id="country-region"></p>
+            <p id="country-population"></p>
+            <p id="country-currencies"></p>
+            <div id="country-flag-wrapper" class="flag-wrapper" hidden>
+              <img id="country-flag" alt="Country flag" />
+            </div>
+          </div>
+        </article>
+
+        <article class="card" id="facts-card" hidden>
+          <h2>Interesting Facts</h2>
+          <div class="card-body" id="facts-content">
+            <div id="facts-list"></div>
+            <p id="facts-unavailable" class="facts-unavailable" hidden>
+              Facts are not available at the moment.
+            </p>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
