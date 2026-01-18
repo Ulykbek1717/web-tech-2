@@ -1,5 +1,5 @@
 node_modules/
 .
-POSTMAN_TESTING_ENVIRONMENT.md
+POSTMAN.md
 .DS_Store
 *.log
