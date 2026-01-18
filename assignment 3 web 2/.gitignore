@@ -1,5 +1,5 @@
 node_modules/
-.
+.env
 POSTMAN.md
 .DS_Store
 *.log
