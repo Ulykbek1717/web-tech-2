@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopLite — Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="assets/css/style.css" rel="stylesheet">
+  
+  <!-- Apply theme before page render -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- Header / Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">ShopLite</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsMain" aria-controls="navbarsMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html">Cart <span id="cart-count" class="badge bg-success ms-1">0</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item ms-lg-3">
+            <button id="mode-toggle" class="btn btn-sm btn-outline-light">Dark/Light</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mt-5 pt-4">
+    <div class="container">
+      <!-- Hero Carousel -->
+      <div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner rounded shadow-sm overflow-hidden">
+              <div class="carousel-item active" data-bs-interval="4000">
+                <img src="https://cdn0.vox-cdn.com/uploads/chorus_asset/file/6384159/final_cb_0086.0.jpg"
+                        class="d-block w-100 object-cover" alt="Online shopping banner">
+                    <div class="carousel-caption d-none d-md-block text-start">
+                    <h5 class="fw-bold">Welcome to ShopLite</h5>
+                    <p>The best deals and fast delivery.</p>
+                    <a class="btn btn-primary btn-sm" href="products.html">Shop Now</a>
+                </div>
+          </div>
+
+
+
+          <div class="carousel-item" data-bs-interval="4000">
+            <img src="https://images.unsplash.com/photo-1561715276-a2d087060f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                class="d-block w-100 object-cover" alt="New arrivals banner">
+            <div class="carousel-caption d-none d-md-block text-end">
+              <h5 class="fw-bold">New Arrivals</h5>
+              <p>Discover our latest collection.</p>
+            </div>
+          </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+      <!-- Features -->
+      <section class="mb-5">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="p-4 bg-light rounded h-100">
+              <h5 class="fw-semibold">Fast Delivery</h5>
+              <p class="text-muted mb-0">We ship within 24 hours across the country.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-light rounded h-100">
+              <h5 class="fw-semibold">Quality Guarantee</h5>
+              <p class="text-muted mb-0">All products are checked before shipping.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-4 bg-light rounded h-100">
+              <h5 class="fw-semibold">24/7 Support</h5>
+              <p class="text-muted mb-0">We are re always here to help you.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      <section class="text-center py-5 bg-primary text-white rounded">
+        <h3 class="mb-3">Ready to start shopping?</h3>
+        <a href="products.html" class="btn btn-light">Browse Catalog</a>
+      </section>
+    </div>
+  </main>
+
+<!-- Footer -->
+  <footer class="site-footer bg-dark text-white-50 pt-5 pb-4">
+    <div class="container">
+      <div class="row gy-4">
+        
+        <div class="col-md-4">
+          <h5 class="text-white mb-3">ShopLite</h5>
+          <p class="small mb-3">
+            Quality products at fair prices. Fast delivery and easy returns within 14 days.
+          </p>
+          <div class="d-flex gap-3">
+            <a href="https://www.instagram.com/instagram" class="text-white-50 text-decoration-none" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <a href="https://t.me/theulykbek" class="text-white-50 text-decoration-none" target="_blank" rel="noopener">
+              Telegram
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none">About Us</a></li>
+            <li class="mb-2"><a href="products.html" class="text-white-50 text-decoration-none">Products</a></li>
+            <li class="mb-2"><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+            <li class="mb-2"><a href="privacy.html" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="text-white mb-3">Contact Info</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2">
+              <strong>Email:</strong><br>
+              <a href="mailto:support@shoplite.com" class="text-white-50 text-decoration-none">support@shoplite.com</a>
+            </li>
+            <li class="mb-2">
+              <strong>Phone:</strong><br>
+              <a href="tel:+77777777777" class="text-white-50 text-decoration-none">+7 777 777 77 77</a>
+            </li>
+            <li class="mb-2">
+              <strong>Hours:</strong> 9:00 – 21:00 (Mon-Sun)
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <div class="text-center small text-white-50">
+        <p class="mb-0">© <span id="site-year"></span> ShopLite. All rights reserved. Built by Ulykbek</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- jQuery -->  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>  <!-- Bootstrap Bundle JS -->  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>  <!-- EmailJS SDK -->  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>  <!-- App JS -->  <script src="assets/js/app.js"></script>
+</body>
+</html>

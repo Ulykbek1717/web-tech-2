@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopLite — Cart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
+  
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">ShopLite</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsMain" aria-controls="navbarsMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html">Cart <span id="cart-count" class="badge bg-success ms-1">0</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item ms-lg-3">
+            <button id="mode-toggle" class="btn btn-sm btn-outline-light">Dark/Light</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mt-5 pt-4">
+    <div class="container">
+      <h3 class="mb-4">Shopping Cart</h3>
+      <div class="table-responsive mb-3">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th class="text-center">Price</th>
+              <th class="text-center">Quantity</th>
+              <th class="text-end">Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cart-items">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3">
+        <div>
+          <button id="clear-cart" class="btn btn-outline-danger btn-sm">Clear Cart</button>
+        </div>
+        <div class="text-md-end">
+          <div>Subtotal: <span id="cart-subtotal" class="fw-semibold">₸ 0</span></div>
+          <div>Total: <span id="cart-total" class="fw-bold">₸ 0</span></div>
+          <a href="checkout.html" class="btn btn-primary btn-sm mt-2">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<!-- Footer -->
+  <footer class="site-footer bg-dark text-white-50 pt-5 pb-4">
+    <div class="container">
+      <div class="row gy-4">
+        
+        <div class="col-md-4">
+          <h5 class="text-white mb-3">ShopLite</h5>
+          <p class="small mb-3">
+            Quality products at fair prices. Fast delivery and easy returns within 14 days.
+          </p>
+          <div class="d-flex gap-3">
+            <a href="https://www.instagram.com/instagram" class="text-white-50 text-decoration-none" target="_blank" rel="noopener">
+              Instagram
+            </a>
+            <a href="https://t.me/theulykbek" class="text-white-50 text-decoration-none" target="_blank" rel="noopener">
+              Telegram
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none">About Us</a></li>
+            <li class="mb-2"><a href="products.html" class="text-white-50 text-decoration-none">Products</a></li>
+            <li class="mb-2"><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+            <li class="mb-2"><a href="privacy.html" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <h6 class="text-white mb-3">Contact Info</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2">
+              <strong>Email:</strong><br>
+              <a href="mailto:support@shoplite.com" class="text-white-50 text-decoration-none">support@shoplite.com</a>
+            </li>
+            <li class="mb-2">
+              <strong>Phone:</strong><br>
+              <a href="tel:+77777777777" class="text-white-50 text-decoration-none">+7 777 777 77 77</a>
+            </li>
+            <li class="mb-2">
+              <strong>Hours:</strong> 9:00 – 21:00 (Mon-Sun)
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <hr class="border-secondary my-4">
+
+      <div class="text-center small text-white-50">
+        <p class="mb-0">© <span id="site-year"></span> ShopLite. All rights reserved. Built by Ulykbek</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
