@@ -1,6 +1,6 @@
 # ShopLite E-commerce API
 
-## 📋 Project Overview
+##  Project Overview
 Full-stack e-commerce application with MongoDB Atlas backend and Express.js API. Built for Web Development Assignment 3.
 
 **Topic:** E-commerce Product Management System
@@ -10,7 +10,7 @@ Full-stack e-commerce application with MongoDB Atlas backend and Express.js API.
 
 ---
 
-## 🚀 Setup Instructions
+##  Setup Instructions
 
 ### 1. MongoDB Atlas Setup
 
@@ -83,14 +83,14 @@ npm run dev
 
 You should see:
 ```
-✅ Connected to MongoDB Atlas
-🚀 Server running on http://localhost:3000
-📊 Admin interface: http://localhost:3000/admin
+ Connected to MongoDB Atlas
+ Server running on http://localhost:3000
+ Admin interface: http://localhost:3000/admin
 ```
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### Products Endpoints
 
@@ -114,7 +114,7 @@ You should see:
 
 ---
 
-## 🧪 Testing with Postman
+##  Testing with Postman
 
 ### Example: Create Product
 
@@ -192,21 +192,21 @@ Content-Type: application/json
 
 ---
 
-## 🖥️ Admin Interface
+##  Admin Interface
 
 Access the admin panel at: **http://localhost:3000/admin**
 
 Features:
-- ✅ Test all API endpoints
-- ✅ View real-time responses
-- ✅ Create, read, update, delete products
-- ✅ Manage reviews
-- ✅ API health check
-- ✅ Dark/Light mode
+-  Test all API endpoints
+-  View real-time responses
+-  Create, read, update, delete products
+-  Manage reviews
+-  API health check
+-  Dark/Light mode
 
 ---
 
-## 📦 Database Schema
+##  Database Schema
 
 ### Product Schema
 ```javascript
@@ -243,7 +243,7 @@ Features:
 
 ---
 
-## ✅ Error Handling
+##  Error Handling
 
 ### Status Codes
 - `200` - Success (GET, PUT, DELETE)
@@ -269,7 +269,7 @@ Features:
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 assignment 3 web 2/
@@ -297,28 +297,28 @@ assignment 3 web 2/
 
 ---
 
-## 🎯 Grading Criteria Checklist
+##  Grading Criteria Checklist
 
-- ✅ **Core Functionality (30%)**: All CRUD operations work with MongoDB
-- ✅ **Topic & Schema Design (10%)**: Product and Review schemas with proper validation
-- ✅ **Code Organization (10%)**: Clean structure with models, routes, middleware
-- ✅ **Defense (50%)**: Complete documentation and working demo
+-  **Core Functionality (30%)**: All CRUD operations work with MongoDB
+-  **Topic & Schema Design (10%)**: Product and Review schemas with proper validation
+-  **Code Organization (10%)**: Clean structure with models, routes, middleware
+-  **Defense (50%)**: Complete documentation and working demo
 
 ### Features Implemented:
-1. ✅ MongoDB Atlas connection
-2. ✅ Two complex schemas (Products + Reviews)
-3. ✅ Full CRUD for Products (POST, GET, GET by ID, PUT, DELETE)
-4. ✅ Full CRUD for Reviews
-5. ✅ Request validation with express-validator
-6. ✅ Proper error handling with status codes
-7. ✅ Admin interface for testing
-8. ✅ Timestamps (createdAt, updatedAt)
-9. ✅ Relationships (Reviews reference Products)
-10. ✅ Query filters (category, sorting)
+1.  MongoDB Atlas connection
+2.  Two complex schemas (Products + Reviews)
+3.  Full CRUD for Products (POST, GET, GET by ID, PUT, DELETE)
+4.  Full CRUD for Reviews
+5.  Request validation with express-validator
+6.  Proper error handling with status codes
+7.  Admin interface for testing
+8.  Timestamps (createdAt, updatedAt)
+9.  Relationships (Reviews reference Products)
+10.  Query filters (category, sorting)
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Cannot connect to MongoDB
 - Check if your IP is whitelisted (0.0.0.0/0 for development)
@@ -338,7 +338,7 @@ npm install
 
 ---
 
-## 📞 Support
+##  Support
 
 For questions during defense:
 - **Author:** Ulykbek
@@ -347,7 +347,7 @@ For questions during defense:
 
 ---
 
-## 📝 Notes for Defense
+##  Notes for Defense
 
 **Key Points to Explain:**
 1. MongoDB Atlas setup and connection
