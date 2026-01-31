@@ -315,16 +315,16 @@ Method: DELETE
 
 Execute in order:
 
-1. ✅ GET `/api/health` - check API
-2. ✅ POST `/api/products` - create iPhone (save ID)
-3. ✅ POST `/api/products` - create Laptop (save ID)
-4. ✅ GET `/api/products` - get all products
-5. ✅ GET `/api/products/:id` - get single product
-6. ✅ POST `/api/reviews` - create review for iPhone
-7. ✅ GET `/api/reviews` - get all reviews
-8. ✅ PUT `/api/products/:id` - update iPhone
-9. ✅ DELETE `/api/reviews/:id` - delete review
-10. ✅ DELETE `/api/products/:id` - delete Laptop
+1.  GET `/api/health` - check API
+2.  POST `/api/products` - create iPhone (save ID)
+3.  POST `/api/products` - create Laptop (save ID)
+4.  GET `/api/products` - get all products
+5.  GET `/api/products/:id` - get single product
+6.  POST `/api/reviews` - create review for iPhone
+7.  GET `/api/reviews` - get all reviews
+8.  PUT `/api/products/:id` - update iPhone
+9.  DELETE `/api/reviews/:id` - delete review
+10.  DELETE `/api/products/:id` - delete Laptop
 
 ---
 
