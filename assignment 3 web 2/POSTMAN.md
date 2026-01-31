@@ -1,23 +1,23 @@
 # Postman Testing Guide - ShopLite API
 
-## Сначала запусти сервер!
+## First, start the server!
 ```powershell
 npm start
 ```
-Сервер должен работать на http://localhost:3000
+The server should be running at http://localhost:3000
 
 ---
 
-## 1. HEALTH CHECK (Проверка API)
+## 1. HEALTH CHECK (API Status Check)
 
-### GET - Проверить статус API
+### GET - Check API Status
 ```
 URL: http://localhost:3000/api/health
-Метод: GET
-Body: не нужен
+Method: GET
+Body: not required
 ```
 
-**Ожидаемый ответ:**
+**Expected Response:**
 ```json
 {
   "status": "OK",
@@ -28,12 +28,12 @@ Body: не нужен
 
 ---
 
-## 2. PRODUCTS - Товары
+## 2. PRODUCTS
 
-### POST - Создать товар №1 (iPhone)
+### POST - Create Product #1 (iPhone)
 ```
 URL: http://localhost:3000/api/products
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
@@ -41,17 +41,17 @@ Body (raw JSON):
 {
   "name": "iPhone 17 Pro Max",
   "price": 499999,
-  "description": "Последний флагманский смартфон с продвинутыми функциями и отличной камерой",
+  "description": "Latest flagship smartphone with advanced features and excellent camera",
   "category": "electronics",
   "imageUrl": "https://cdn0.it4profit.com/s3size/el:t/rt:fill/w:900/plain/s3://cms/product/3f/6d/3f6d9919916a6b670582e90692a99c5a/250915140014016549.webp",
   "stock": 50
 }
 ```
 
-### POST - Создать товар №2 (Laptop)
+### POST - Create Product #2 (Laptop)
 ```
 URL: http://localhost:3000/api/products
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
@@ -59,17 +59,17 @@ Body (raw JSON):
 {
   "name": "MacBook Air M3",
   "price": 599999,
-  "description": "Ультратонкий ноутбук с чипом M3, 13 дюймов, 8GB RAM, 512GB SSD",
+  "description": "Ultra-thin laptop with M3 chip, 13 inches, 8GB RAM, 512GB SSD",
   "category": "electronics",
   "imageUrl": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=60",
   "stock": 30
 }
 ```
 
-### POST - Создать товар №3 (Headphones)
+### POST - Create Product #3 (Headphones)
 ```
 URL: http://localhost:3000/api/products
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
@@ -77,17 +77,17 @@ Body (raw JSON):
 {
   "name": "Wireless Headphones Pro",
   "price": 89999,
-  "description": "Беспроводные наушники с активным шумоподавлением и 30 часами работы",
+  "description": "Wireless headphones with active noise cancellation and 30 hours of battery life",
   "category": "electronics",
   "imageUrl": "https://www.belkin.com/dw/image/v2/BGBH_PRD/on/demandware.static/-/Sites-master-product-catalog-blk/default/dw3589d5bb/images/hi-res/6/6de48f1507953676_AUD009fqBK-soundform-engage-overear-enc-headphones-web-gallery-01.jpg",
   "stock": 100
 }
 ```
 
-### POST - Создать товар №4 (Hoodie)
+### POST - Create Product #4 (Hoodie)
 ```
 URL: http://localhost:3000/api/products
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
@@ -95,41 +95,41 @@ Body (raw JSON):
 {
   "name": "Men's Premium Hoodie",
   "price": 25000,
-  "description": "Удобная толстовка из качественного хлопка, размер L, цвет черный",
+  "description": "Comfortable hoodie made of quality cotton, size L, black color",
   "category": "apparel",
   "imageUrl": "https://media.istockphoto.com/id/1177415728/photo/mens-black-blank-hoodie-template-from-two-sides-natural-shape-on-invisible-mannequin-for-your.jpg",
   "stock": 75
 }
 ```
 
-### GET - Получить все товары
+### GET - Get All Products
 ```
 URL: http://localhost:3000/api/products
-Метод: GET
+Method: GET
 ```
 
-### GET - Получить товары по категории
+### GET - Get Products by Category
 ```
 URL: http://localhost:3000/api/products?category=electronics
-Метод: GET
+Method: GET
 ```
 
-### GET - Получить один товар (замени PRODUCT_ID на реальный ID из предыдущего запроса)
+### GET - Get Single Product (replace PRODUCT_ID with actual ID from previous request)
 ```
 URL: http://localhost:3000/api/products/PRODUCT_ID
-Метод: GET
+Method: GET
 
-Пример: http://localhost:3000/api/products/678a1b2c3d4e5f6789abcdef
+Example: http://localhost:3000/api/products/678a1b2c3d4e5f6789abcdef
 ```
-**Как получить PRODUCT_ID:**
-1. Сделай GET запрос на `/api/products`
-2. Скопируй значение `_id` любого товара
-3. Вставь в URL вместо PRODUCT_ID
+**How to get PRODUCT_ID:**
+1. Make a GET request to `/api/products`
+2. Copy the `_id` value of any product
+3. Insert it into the URL instead of PRODUCT_ID
 
-### PUT - Обновить товар (замени PRODUCT_ID)
+### PUT - Update Product (replace PRODUCT_ID)
 ```
 URL: http://localhost:3000/api/products/PRODUCT_ID
-Метод: PUT
+Method: PUT
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
@@ -137,219 +137,219 @@ Body (raw JSON):
 {
   "name": "iPhone 17 Pro Max - Updated",
   "price": 449999,
-  "description": "Обновленное описание товара со скидкой",
+  "description": "Updated product description with discount",
   "category": "electronics",
   "stock": 45
 }
 ```
 
-### DELETE - Удалить товар (замени PRODUCT_ID)
+### DELETE - Delete Product (replace PRODUCT_ID)
 ```
 URL: http://localhost:3000/api/products/PRODUCT_ID
-Метод: DELETE
+Method: DELETE
 ```
 
 ---
 
-## 3. REVIEWS - Отзывы
+## 3. REVIEWS
 
-### POST - Создать отзыв №1 (замени PRODUCT_ID на реальный ID товара)
+### POST - Create Review #1 (replace PRODUCT_ID with actual product ID)
 ```
 URL: http://localhost:3000/api/reviews
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
 ```json
 {
   "productId": "PRODUCT_ID",
-  "author": "Алексей Иванов",
+  "author": "Alexey Ivanov",
   "rating": 5,
-  "comment": "Отличный товар! Очень доволен покупкой. Рекомендую всем!"
+  "comment": "Excellent product! Very satisfied with the purchase. Recommend to everyone!"
 }
 ```
 
-### POST - Создать отзыв №2
+### POST - Create Review #2
 ```
 URL: http://localhost:3000/api/reviews
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
 ```json
 {
   "productId": "PRODUCT_ID",
-  "author": "Мария Петрова",
+  "author": "Maria Petrova",
   "rating": 4,
-  "comment": "Хороший продукт, но немного дороговато. В целом качество на уровне."
+  "comment": "Good product, but a bit expensive. Overall quality is decent."
 }
 ```
 
-### POST - Создать отзыв №3
+### POST - Create Review #3
 ```
 URL: http://localhost:3000/api/reviews
-Метод: POST
+Method: POST
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
 ```json
 {
   "productId": "PRODUCT_ID",
-  "author": "Дмитрий Сидоров",
+  "author": "Dmitry Sidorov",
   "rating": 3,
-  "comment": "Нормально, но ожидал большего за эту цену. Доставка заняла много времени."
+  "comment": "Okay, but expected more for this price. Delivery took a long time."
 }
 ```
 
-### GET - Получить все отзывы
+### GET - Get All Reviews
 ```
 URL: http://localhost:3000/api/reviews
-Метод: GET
+Method: GET
 ```
 
-### GET - Получить отзывы для конкретного товара
+### GET - Get Reviews for Specific Product
 ```
 URL: http://localhost:3000/api/reviews?productId=PRODUCT_ID
-Метод: GET
+Method: GET
 ```
 
-### GET - Получить один отзыв (замени REVIEW_ID)
+### GET - Get Single Review (replace REVIEW_ID)
 ```
 URL: http://localhost:3000/api/reviews/REVIEW_ID
-Метод: GET
+Method: GET
 ```
 
-### PUT - Обновить отзыв (замени REVIEW_ID и PRODUCT_ID)
+### PUT - Update Review (replace REVIEW_ID and PRODUCT_ID)
 ```
 URL: http://localhost:3000/api/reviews/REVIEW_ID
-Метод: PUT
+Method: PUT
 Headers: Content-Type: application/json
 Body (raw JSON):
 ```
 ```json
 {
   "productId": "PRODUCT_ID",
-  "author": "Алексей Иванов (обновлено)",
+  "author": "Alexey Ivanov (updated)",
   "rating": 5,
-  "comment": "Обновил отзыв: товар действительно превосходный!"
+  "comment": "Updated review: product is truly excellent!"
 }
 ```
 
-### DELETE - Удалить отзыв (замени REVIEW_ID)
+### DELETE - Delete Review (replace REVIEW_ID)
 ```
 URL: http://localhost:3000/api/reviews/REVIEW_ID
-Метод: DELETE
+Method: DELETE
 ```
 
 ---
 
-## 4. ПОШАГОВАЯ ИНСТРУКЦИЯ
+## 4. STEP-BY-STEP INSTRUCTIONS
 
-### Шаг 1: Проверь API
-1. Открой Postman
-2. Создай новый запрос
-3. Выбери метод: **GET**
+### Step 1: Check API
+1. Open Postman
+2. Create a new request
+3. Select method: **GET**
 4. URL: `http://localhost:3000/api/health`
-5. Нажми **Send**
-6. Должен вернуться статус 200 OK
+5. Click **Send**
+6. Should return status 200 OK
 
-### Шаг 2: Создай первый товар
-1. Создай новый запрос
-2. Метод: **POST**
+### Step 2: Create First Product
+1. Create a new request
+2. Method: **POST**
 3. URL: `http://localhost:3000/api/products`
-4. Перейди на вкладку **Headers**
+4. Go to **Headers** tab
    - Key: `Content-Type`
    - Value: `application/json`
-5. Перейди на вкладку **Body**
-6. Выбери **raw** и **JSON**
-7. Скопируй JSON для iPhone (см. выше)
-8. Нажми **Send**
-9. **ВАЖНО:** Скопируй значение `_id` из ответа!
+5. Go to **Body** tab
+6. Select **raw** and **JSON**
+7. Copy the JSON for iPhone (see above)
+8. Click **Send**
+9. **IMPORTANT:** Copy the `_id` value from the response!
 
-### Шаг 3: Получи все товары
-1. Новый запрос
-2. Метод: **GET**
+### Step 3: Get All Products
+1. New request
+2. Method: **GET**
 3. URL: `http://localhost:3000/api/products`
-4. Нажми **Send**
-5. Увидишь все созданные товары
+4. Click **Send**
+5. You'll see all created products
 
-### Шаг 4: Создай отзыв
-1. Скопируй `_id` товара из предыдущего запроса
-2. Новый запрос POST на `/api/reviews`
-3. В Body замени `PRODUCT_ID` на скопированный `_id`
-4. Нажми **Send**
+### Step 4: Create a Review
+1. Copy the product `_id` from the previous request
+2. New POST request to `/api/reviews`
+3. In Body, replace `PRODUCT_ID` with the copied `_id`
+4. Click **Send**
 
-### Шаг 5: Обнови товар
-1. Скопируй `_id` товара
-2. Новый запрос PUT на `http://localhost:3000/api/products/ВСТАВЬ_ID_СЮДА`
-3. В Body укажи новые данные
-4. Нажми **Send**
+### Step 5: Update Product
+1. Copy the product `_id`
+2. New PUT request to `http://localhost:3000/api/products/INSERT_ID_HERE`
+3. In Body, specify new data
+4. Click **Send**
 
-### Шаг 6: Удали товар
-1. Новый запрос DELETE на `http://localhost:3000/api/products/ВСТАВЬ_ID_СЮДА`
-2. Нажми **Send**
-
----
-
-## 5. ТИПИЧНЫЕ ОШИБКИ
-
-### Ошибка 400 - Validation failed
-**Причина:** Неправильные данные
-**Решение:** Проверь, что все обязательные поля заполнены:
-- name (минимум 3 символа)
-- price (число >= 0)
-- description (минимум 10 символов)
-- category (только: electronics, apparel, home, other)
-
-### Ошибка 404 - Not Found
-**Причина:** Неправильный ID товара/отзыва
-**Решение:** Проверь, что ID существует (сделай GET запрос)
-
-### Ошибка 500 - Server Error
-**Причина:** Проблема с базой данных
-**Решение:** Проверь подключение к MongoDB Atlas
+### Step 6: Delete Product
+1. New DELETE request to `http://localhost:3000/api/products/INSERT_ID_HERE`
+2. Click **Send**
 
 ---
 
-## 6. БЫСТРЫЙ ТЕСТ (вся последовательность)
+## 5. COMMON ERRORS
 
-Выполни по порядку:
+### Error 400 - Validation failed
+**Cause:** Incorrect data
+**Solution:** Check that all required fields are filled:
+- name (minimum 3 characters)
+- price (number >= 0)
+- description (minimum 10 characters)
+- category (only: electronics, apparel, home, other)
 
-1. ✅ GET `/api/health` - проверка API
-2. ✅ POST `/api/products` - создай iPhone (сохрани ID)
-3. ✅ POST `/api/products` - создай Laptop (сохрани ID)
-4. ✅ GET `/api/products` - получи все товары
-5. ✅ GET `/api/products/:id` - получи один товар
-6. ✅ POST `/api/reviews` - создай отзыв для iPhone
-7. ✅ GET `/api/reviews` - получи все отзывы
-8. ✅ PUT `/api/products/:id` - обнови iPhone
-9. ✅ DELETE `/api/reviews/:id` - удали отзыв
-10. ✅ DELETE `/api/products/:id` - удали Laptop
+### Error 404 - Not Found
+**Cause:** Incorrect product/review ID
+**Solution:** Check that the ID exists (make a GET request)
+
+### Error 500 - Server Error
+**Cause:** Database connection issue
+**Solution:** Check MongoDB Atlas connection
 
 ---
 
-## 7. НАСТРОЙКА POSTMAN
+## 6. QUICK TEST (complete sequence)
 
-### Создай коллекцию (рекомендуется)
-1. В Postman нажми **New Collection**
-2. Назови: "ShopLite API"
-3. Создай папки:
+Execute in order:
+
+1. ✅ GET `/api/health` - check API
+2. ✅ POST `/api/products` - create iPhone (save ID)
+3. ✅ POST `/api/products` - create Laptop (save ID)
+4. ✅ GET `/api/products` - get all products
+5. ✅ GET `/api/products/:id` - get single product
+6. ✅ POST `/api/reviews` - create review for iPhone
+7. ✅ GET `/api/reviews` - get all reviews
+8. ✅ PUT `/api/products/:id` - update iPhone
+9. ✅ DELETE `/api/reviews/:id` - delete review
+10. ✅ DELETE `/api/products/:id` - delete Laptop
+
+---
+
+## 7. POSTMAN SETUP
+
+### Create Collection (recommended)
+1. In Postman click **New Collection**
+2. Name it: "ShopLite API"
+3. Create folders:
    - Health Check
    - Products
    - Reviews
-4. Добавляй запросы в соответствующие папки
+4. Add requests to corresponding folders
 
-### Используй переменные (продвинутый уровень)
-1. Создай environment "ShopLite Local"
-2. Добавь переменную:
+### Use Variables (advanced level)
+1. Create environment "ShopLite Local"
+2. Add variable:
    - `base_url` = `http://localhost:3000/api`
-3. Используй в запросах: `{{base_url}}/products`
+3. Use in requests: `{{base_url}}/products`
 
 ---
 
-## 8. ПРИМЕРЫ ОТВЕТОВ
+## 8. RESPONSE EXAMPLES
 
-### Успешное создание товара (201)
+### Successful Product Creation (201)
 ```json
 {
   "success": true,
@@ -358,7 +358,7 @@ URL: http://localhost:3000/api/reviews/REVIEW_ID
     "_id": "678a1b2c3d4e5f6789abcdef",
     "name": "iPhone 17 Pro Max",
     "price": 499999,
-    "description": "Последний флагманский смартфон...",
+    "description": "Latest flagship smartphone...",
     "category": "electronics",
     "stock": 50,
     "createdAt": "2026-01-17T10:00:00.000Z",
@@ -367,7 +367,7 @@ URL: http://localhost:3000/api/reviews/REVIEW_ID
 }
 ```
 
-### Ошибка валидации (400)
+### Validation Error (400)
 ```json
 {
   "error": {
@@ -382,7 +382,7 @@ URL: http://localhost:3000/api/reviews/REVIEW_ID
 }
 ```
 
-### Товар не найден (404)
+### Product Not Found (404)
 ```json
 {
   "error": {

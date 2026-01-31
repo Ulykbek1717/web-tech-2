@@ -9,7 +9,6 @@ console.log("MONGODB_URI =", process.env.MONGODB_URI);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,18 +16,47 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch((err) => {
+// MongoDB Connection with retry logic
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('Connected to MongoDB Atlas');
+  } catch (err) {
     console.error('MongoDB connection error:', err.message);
-    console.error('Server will continue running, but API endpoints will not work until MongoDB is connected.');
-    console.error('To fix: Whitelist your IP address in MongoDB Atlas (see README.md)');
-  });
+    console.error('  Common solutions:');
+    console.error('  1. Whitelist your IP address in MongoDB Atlas Network Access');
+    console.error('  2. Check if your connection string is correct');
+    console.error('  3. Verify MongoDB cluster is active (not paused)');
+    console.error('  4. Check firewall/VPN settings');
+    console.error('\n  Server will continue running, but database operations will fail.');
+  }
+};
+
+// Handle MongoDB connection events
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('Mongoose connection error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected from MongoDB');
+});
+
+// Connect to database
+connectDB();
 
 // Routes
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/users', require('./routes/users'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -39,10 +67,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve admin interface
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
+// Health check endpoint
 
 // Global Error Handler
 app.use((err, req, res, next) => {
@@ -68,5 +93,4 @@ app.use('/api/*', (req, res) => {
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Admin interface: http://localhost:${PORT}/admin`);
 });

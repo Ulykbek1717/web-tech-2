@@ -92,12 +92,71 @@
   }
 
   // PRODUCTS PAGE
-  function initProductsPage() {
-    const cards = $('.product-card');
-    cards.hide();
-    cards.each(function (i) {
-      $(this).delay(100 * i).fadeIn(200);
-    });
+  async function initProductsPage() {
+    if ($('#products-grid').length === 0) return;
+
+    try {
+      // Fetch products from API
+      const response = await fetch('/api/products');
+      const result = await response.json();
+      
+      if (!result.success || !result.data) {
+        console.error('Failed to load products');
+        $('#products-grid').html('<div class="col-12 text-center"><p>Failed to load products</p></div>');
+        return;
+      }
+
+      const products = result.data;
+      
+      // Render products
+      const grid = $('#products-grid');
+      grid.empty();
+      
+      products.forEach(product => {
+        // Check if user is admin or superadmin
+        const user = Auth.getUser();
+        const isAdmin = user && (user.role === 'admin' || user.role === 'superadmin');
+        
+        const actionButton = isAdmin 
+          ? `<div class="alert alert-info mb-0">
+               <strong>Stock:</strong> ${product.stock || 0} units
+             </div>`
+          : `<button class="btn btn-primary w-100 add-to-cart" 
+               data-id="${product._id}"
+               data-name="${product.name}"
+               data-price="${product.price}">
+               Add to Cart
+             </button>`;
+        
+        const card = `
+          <div class="col-md-6 col-lg-4 product-card" data-category="${product.category}">
+            <div class="card h-100 shadow-sm">
+              <img src="${product.imageUrl || 'https://via.placeholder.com/300x300?text=No+Image'}" class="card-img-top" alt="${product.name}">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">${product.name}</h5>
+                <p class="text-muted small">${product.description.substring(0, 100)}...</p>
+                <div class="mt-auto">
+                  <p class="h5 text-primary mb-2">${formatCurrency(product.price)}</p>
+                  ${actionButton}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.append(card);
+      });
+
+      // Animate cards
+      const cards = $('.product-card');
+      cards.hide();
+      cards.each(function (i) {
+        $(this).delay(100 * i).fadeIn(200);
+      });
+
+    } catch (error) {
+      console.error('Error loading products:', error);
+      $('#products-grid').html('<div class="col-12 text-center"><p>Error loading products</p></div>');
+    }
 
     // Add to cart
     $(document).on('click', '.add-to-cart', function () {
@@ -130,7 +189,7 @@
 
       $('.product-card').each(function () {
         const category = $(this).data('category');
-        if (activeCategories.includes(category)) {
+        if (activeCategories.length === 0 || activeCategories.includes(category)) {
           $(this).show();
         } else {
           $(this).hide();
@@ -244,56 +303,80 @@
       const customerAddress = document.getElementById('address').value;
       const customerCity = document.getElementById('city').value;
       const customerZip = document.getElementById('zip').value;
+      const customerPhone = document.getElementById('phone').value;
+      const customerCountry = document.getElementById('country').value;
       const paymentMethod = payChecked.value;
-
-      let orderDetails = '';
-      items.forEach(function(item) {
-        orderDetails += `${item.name} × ${item.qty} = ${formatCurrency(item.price * item.qty)}\n`;
-      });
-
-      const shippingAddress = `${customerAddress}, ${customerCity}, ${customerZip}`;
 
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
       submitBtn.textContent = 'Processing...';
 
-      // Initialize EmailJS
-      if (window.emailjs && typeof window.emailjs.init === 'function') {
-        emailjs.init('_X_BHlZmmaOTmJlN7');
+      // Create order via API
+      const orderData = {
+        items: items.map(function(item) {
+          return {
+            productId: item.id,
+            quantity: item.qty
+          };
+        }),
+        shippingAddress: {
+          fullName: customerName,
+          address: customerAddress,
+          city: customerCity,
+          postalCode: customerZip,
+          country: customerCountry,
+          phone: customerPhone
+        },
+        paymentMethod: paymentMethod === 'cod' ? 'cash_on_delivery' : paymentMethod,
+        notes: ''
+      };
+
+      // Get auth token
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        alert('Please login to place an order');
+        window.location.href = 'login.html';
+        return;
       }
 
-      // Send  EmailJS
-      if (window.emailjs && typeof window.emailjs.send === 'function') {
-        emailjs.send('service_mcrr0ml', 'template_gp880rr', { 
-          to_email: customerEmail,
-          to_name: customerName,
-          order_details: orderDetails,
-          order_total: formatCurrency(total),
-          shipping_address: shippingAddress,
-          payment_method: paymentMethod === 'card' ? 'Credit/Debit Card' : 'Cash on Delivery'
-        })
-        .then(function(response) {
-          console.log('Order email sent!', response);
-          alert(`Thank you, ${customerName}!\n\nYour order has been placed successfully.\nConfirmation email sent to ${customerEmail}`);
+      // Send order to server
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(orderData)
+      })
+      .then(function(response) {
+        return response.json().then(function(data) {
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function(result) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+
+        if (result.ok) {
+          alert(`Thank you, ${customerName}!\n\nYour order has been placed successfully.\nOrder total: ${formatCurrency(total)}\nOrder ID: ${result.data.data._id}`);
           saveCart([]);
           form.reset();
           form.classList.remove('was-validated');
           window.location.href = 'index.html';
-        })
-        .catch(function(error) {
-          console.error('Email send error:', error);
-          alert('Error: ' + error.text + '\n\nPlease contact support.');
-        })
-        .finally(function() {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-        });
-      } else {
-        alert('EmailJS not loaded. Please refresh the page.');
+        } else {
+          const errorMsg = result.data.error ? result.data.error.message : 'Order failed';
+          alert('Error: ' + errorMsg);
+        }
+      })
+      .catch(function(error) {
+        console.error('Order error:', error);
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
-      }
+        alert('Network error. Please check your connection and try again.');
+      });
     });
   }
 

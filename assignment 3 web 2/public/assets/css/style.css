@@ -30,11 +30,28 @@ main {
 
 /* Product cards */
 .product-card .card-img-top { 
-  height: 220px; /* slightly larger for large images */
+  height: 250px;
   width: 100%;
-  object-fit: cover;    /* ensures the image fills the block */
-  object-position: center; /* center the content */
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background-color: #f8f9fa;
+  padding: 10px;
+}
+
+.card-img-top {
+  height: 250px;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  background-color: #f8f9fa;
+  padding: 10px;
+}
+
+html.dark-mode .card-img-top,
+html.dark-mode .product-card .card-img-top {
+  background-color: #1a1a1a;
 }
 
 /* Footer */

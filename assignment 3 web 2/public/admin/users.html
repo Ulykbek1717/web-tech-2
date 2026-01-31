@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopLite — Manage Users</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">ShopLite</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarsMain">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="../products.html">Products</a></li>
+          <li class="nav-item cart-item"><a class="nav-link" href="../cart.html">Cart <span class="badge bg-primary" id="cart-count">0</span></a></li>
+          <li class="nav-item" id="navAuth">
+            <a class="nav-link" href="../login.html">Login</a>
+          </li>
+          <li class="nav-item"><button id="mode-toggle" class="btn btn-sm btn-outline-light ms-2">🌙</button></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mt-5 pt-4">
+    <div class="container">
+      <h3 class="mb-4">Manage Users</h3>
+
+      <div id="alertContainer"></div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr>
+              <td colspan="5" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    // Check authorization - SUPERADMIN ONLY
+    if (!Auth.isLoggedIn()) {
+      window.location.href = '../login.html';
+    } else {
+      const user = Auth.getUser();
+      if (user.role !== 'superadmin') {
+        alert('Access denied. Superadmin privileges required.');
+        window.location.href = '../index.html';
+      }
+    }
+
+    const roleColors = {
+      'client': 'secondary',
+      'admin': 'primary',
+      'superadmin': 'danger'
+    };
+
+    // Load users
+    async function loadUsers() {
+      try {
+        const response = await Auth.request('/api/users');
+        const result = await response.json();
+        
+        if (!result.success) throw new Error('Failed to load users');
+        
+        const tbody = document.getElementById('usersTableBody');
+        const currentUserId = Auth.getUser().id;
+        tbody.innerHTML = '';
+        
+        result.data.forEach(user => {
+          const date = new Date(user.createdAt).toLocaleDateString();
+          const isCurrentUser = user._id === currentUserId;
+          
+          const row = `
+            <tr>
+              <td>${user.name || 'N/A'}</td>
+              <td>${user.email}</td>
+              <td>
+                <select class="form-select form-select-sm role-select" data-user-id="${user._id}" 
+                        style="width:auto;" ${isCurrentUser ? 'disabled' : ''}>
+                  <option value="client" ${user.role === 'client' ? 'selected' : ''}>Client</option>
+                  <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                  <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
+                </select>
+              </td>
+              <td>${date}</td>
+              <td>
+                ${!isCurrentUser ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${user._id}', '${user.email}')">Delete</button>` : '<small class="text-muted">You</small>'}
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+        
+        // Add role change listeners
+        document.querySelectorAll('.role-select').forEach(select => {
+          select.addEventListener('change', async (e) => {
+            const userId = e.target.dataset.userId;
+            const newRole = e.target.value;
+            await updateUserRole(userId, newRole);
+          });
+        });
+      } catch (error) {
+        console.error('Error loading users:', error);
+        document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error loading users</td></tr>';
+      }
+    }
+
+    // Update user role
+    async function updateUserRole(userId, role) {
+      try {
+        const response = await Auth.request(`/api/users/${userId}/role`, {
+          method: 'PUT',
+          body: JSON.stringify({ role })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update role');
+        
+        showAlert('User role updated successfully!', 'success');
+      } catch (error) {
+        showAlert(error.message, 'danger');
+        loadUsers(); // Reload to reset role
+      }
+    }
+
+    // Delete user
+    async function deleteUser(userId, email) {
+      if (!confirm(`Delete user "${email}"? This action cannot be undone.`)) return;
+      
+      try {
+        const response = await Auth.request(`/api/users/${userId}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete user');
+        
+        showAlert('User deleted successfully!', 'success');
+        loadUsers();
+      } catch (error) {
+        showAlert(error.message, 'danger');
+      }
+    }
+
+    function showAlert(message, type) {
+      const alertContainer = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type} alert-dismissible fade show`;
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      alertContainer.appendChild(alert);
+      
+      setTimeout(() => alert.remove(), 5000);
+    }
+
+    // Load users on page load
+    loadUsers();
+  </script>
+</body>
+</html>
