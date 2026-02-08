@@ -35,6 +35,6 @@ build/
 *.tmp
 temp/
 
-# Documentation (exclude all .md files except README.md)
-*.md
+# Documentation (allow important .md files)
 !README.md
+!DEPLOYMENT.md

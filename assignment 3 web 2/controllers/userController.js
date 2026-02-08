@@ -1,8 +1,6 @@
 const User = require('../models/User');
 
-/**
- * GET /api/users - Get all users (Superadmin only)
- */
+// GET /api/users (Superadmin only)
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find().select('-password').sort({ createdAt: -1 });
@@ -17,9 +15,7 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/users/:id - Get user by ID (Superadmin only)
- */
+// GET /api/users/:id (Superadmin only)
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
@@ -42,9 +38,7 @@ exports.getUserById = async (req, res, next) => {
   }
 };
 
-/**
- * PUT /api/users/:id/role - Update user role (Superadmin only)
- */
+// PUT /api/users/:id/role (Superadmin only)
 exports.updateUserRole = async (req, res, next) => {
   try {
     const { role } = req.body;
@@ -84,12 +78,10 @@ exports.updateUserRole = async (req, res, next) => {
   }
 };
 
-/**
- * DELETE /api/users/:id - Delete user (Superadmin only)
- */
+// DELETE /api/users/:id (Superadmin only)
 exports.deleteUser = async (req, res, next) => {
   try {
-    // Prevent superadmin from deleting themselves
+    // Prevent self-deletion
     if (req.params.id === req.user._id.toString()) {
       return res.status(400).json({
         error: {

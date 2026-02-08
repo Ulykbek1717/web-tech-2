@@ -23,6 +23,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['client', 'admin', 'superadmin'],
     default: 'client'
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationCode: {
+    type: String
+  },
+  verificationCodeExpires: {
+    type: Date
   }
 }, {
   timestamps: true

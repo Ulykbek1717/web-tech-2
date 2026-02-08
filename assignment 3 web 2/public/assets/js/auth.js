@@ -1,33 +1,27 @@
-// Authentication Manager for ShopLite
 (function() {
   const API_BASE = '/api';
   
-  // Authentication Helper Functions
   const Auth = {
-    // Save JWT token and user info to localStorage
+    // Save token and user to localStorage
     saveAuth(token, user) {
       localStorage.setItem('authToken', token);
       localStorage.setItem('authUser', JSON.stringify(user));
       this.updateUIState();
     },
     
-    // Get current token
     getToken() {
       return localStorage.getItem('authToken');
     },
     
-    // Get current user
     getUser() {
       const userStr = localStorage.getItem('authUser');
       return userStr ? JSON.parse(userStr) : null;
     },
     
-    // Check if user is logged in
     isLoggedIn() {
       return !!this.getToken();
     },
     
-    // Logout
     logout() {
       localStorage.removeItem('authToken');
       localStorage.removeItem('authUser');
@@ -35,7 +29,7 @@
       window.location.href = '/index.html';
     },
     
-    // Update UI based on auth state
+    // Update navbar based on user role
     updateUIState() {
       const navAuthContainer = document.getElementById('navAuth');
       if (!navAuthContainer) return;
@@ -44,7 +38,7 @@
         const user = this.getUser();
         const role = user.role || 'client';
         
-        // Hide cart for admins and superadmins
+        // Hide cart for admin/superadmin
         const cartItem = document.querySelector('.cart-item');
         if (cartItem) {
           if (role === 'admin' || role === 'superadmin') {
@@ -54,7 +48,7 @@
           }
         }
         
-        // Hide About and Contact for admins and superadmins
+        // Hide About/Contact for admin/superadmin
         const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
         navLinks.forEach(link => {
           const href = link.getAttribute('href');
@@ -68,12 +62,10 @@
           <li><a class="dropdown-item" href="/products.html">Products</a></li>
         `;
         
-        // Only clients can see cart
         if (role === 'client') {
           menuItems += `<li><a class="dropdown-item" href="/cart.html">My Cart</a></li>`;
         }
         
-        // Admin and Superadmin menu items
         if (role === 'admin' || role === 'superadmin') {
           menuItems += `
             <li><hr class="dropdown-divider"></li>
@@ -83,7 +75,6 @@
           `;
         }
         
-        // Superadmin only menu items
         if (role === 'superadmin') {
           menuItems += `
             <li><a class="dropdown-item" href="/admin/users.html">Manage Users</a></li>
@@ -97,7 +88,6 @@
         
         const roleBadge = role === 'superadmin' ? '[SA]' : role === 'admin' ? '[A]' : '[U]';
         
-        // Add dropdown class to parent li
         navAuthContainer.classList.add('dropdown');
         
         navAuthContainer.innerHTML = `
@@ -110,7 +100,6 @@
           </ul>
         `;
         
-        // Add logout handler
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
           logoutBtn.addEventListener('click', (e) => {
@@ -119,7 +108,6 @@
           });
         }
       } else {
-        // Remove dropdown class when logged out
         navAuthContainer.classList.remove('dropdown');
         navAuthContainer.innerHTML = `
           <a class="nav-link" href="/login.html">Login</a>
@@ -127,7 +115,7 @@
       }
     },
     
-    // Make authenticated API request
+    // Make authenticated request with token
     async request(url, options = {}) {
       const token = this.getToken();
       const headers = {
@@ -145,7 +133,7 @@
           headers
         });
         
-        // If unauthorized, logout
+        // Auto logout on 401
         if (response.status === 401) {
           this.logout();
         }
@@ -157,15 +145,13 @@
     }
   };
   
-  // Make Auth available globally
   window.Auth = Auth;
   
-  // Initialize auth state on page load
   document.addEventListener('DOMContentLoaded', () => {
     Auth.updateUIState();
   });
   
-  // Login Form Handler
+  // Login handler
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -173,6 +159,11 @@
       
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
+      
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Logging in...';
       
       try {
         const response = await fetch(`${API_BASE}/auth/login`, {
@@ -190,19 +181,51 @@
           showAlert('Login successful! Redirecting...', 'success');
           
           setTimeout(() => {
-            // All users go to products page
             window.location.href = '/products.html';
           }, 1000);
         } else {
-          showAlert(data.error?.message || 'Login failed', 'danger');
+          // Handle unverified users
+          if (response.status === 403) {
+            showAlert((data.error?.message || 'Please verify your email'), 'warning');
+            
+            const alertContainer = document.getElementById('alertContainer');
+            const resendLink = document.createElement('button');
+            resendLink.className = 'btn btn-sm btn-link';
+            resendLink.textContent = 'Resend code';
+            resendLink.onclick = async () => {
+              try {
+                const res = await fetch(`${API_BASE}/auth/resend-code`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email })
+                });
+                const resData = await res.json();
+                if (res.ok) {
+                  sessionStorage.setItem('verificationEmail', email);
+                  window.location.href = `/verify.html?email=${encodeURIComponent(email)}`;
+                } else {
+                  showAlert(resData.error?.message || 'Error sending code', 'danger');
+                }
+              } catch (err) {
+                showAlert('Network error', 'danger');
+              }
+            };
+            alertContainer.querySelector('.alert').appendChild(resendLink);
+          } else {
+            showAlert(data.error?.message || 'Login error', 'danger');
+          }
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
         }
       } catch (error) {
         showAlert('Network error: ' + error.message, 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
       }
     });
   }
   
-  // Register Form Handler
+  // Register handler
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
@@ -211,6 +234,11 @@
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
+      
+      const submitBtn = registerForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Registering...';
       
       try {
         const response = await fetch(`${API_BASE}/auth/register`, {
@@ -224,18 +252,23 @@
         const data = await response.json();
         
         if (response.ok) {
-          Auth.saveAuth(data.data.token, data.data.user);
-          showAlert('Registration successful! Redirecting...', 'success');
+          // Save email for verification page
+          sessionStorage.setItem('verificationEmail', email);
+          
+          showAlert('Registration successful! Check your email for verification code.', 'success');
           
           setTimeout(() => {
-            // All users go to products page
-            window.location.href = '/products.html';
-          }, 1000);
+            window.location.href = `/verify.html?email=${encodeURIComponent(email)}`;
+          }, 1500);
         } else {
-          showAlert(data.error?.message || 'Registration failed', 'danger');
+          showAlert(data.error?.message || 'Registration error', 'danger');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
         }
       } catch (error) {
         showAlert('Network error: ' + error.message, 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
       }
     });
   }

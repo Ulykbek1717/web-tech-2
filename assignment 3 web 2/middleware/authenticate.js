@@ -1,13 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * Middleware to verify JWT token and authenticate user
- * Adds user object to req.user if token is valid
- */
+// Verify JWT token and attach user to request
 const authenticate = async (req, res, next) => {
   try {
-    // Get token from Authorization header
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -19,13 +15,11 @@ const authenticate = async (req, res, next) => {
       });
     }
     
-    // Extract token
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    // Extract token from Bearer header
+    const token = authHeader.substring(7);
     
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Find user
     const user = await User.findById(decoded.userId).select('-password');
     
     if (!user) {

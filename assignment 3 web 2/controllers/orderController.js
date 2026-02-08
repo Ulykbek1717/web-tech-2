@@ -1,9 +1,7 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 
-/**
- * POST /api/orders - Create a new order (Authenticated users)
- */
+// POST /api/orders
 exports.createOrder = async (req, res, next) => {
   try {
     const { items, shippingAddress, paymentMethod, notes } = req.body;
@@ -17,7 +15,6 @@ exports.createOrder = async (req, res, next) => {
       });
     }
 
-    // Calculate total amount
     let totalAmount = 0;
     const orderItems = [];
 
@@ -63,21 +60,14 @@ exports.createOrder = async (req, res, next) => {
     next(error);
   }
 };
-
-/**
- * GET /api/orders - Get all orders
- * - Clients see only their orders
- * - Admins/Superadmins see all orders
- */
+// DELETE /api/orders/:id (Admin only)// GET /api/orders (clients see only their orders, admins see all)
 exports.getAllOrders = async (req, res, next) => {
   try {
     let query = {};
     
-    // If user is client, show only their orders
     if (req.user.role === 'client') {
       query.userId = req.user._id;
     }
-    // Admins and superadmins can see all orders
 
     const orders = await Order.find(query)
       .populate('userId', 'name email')
@@ -93,9 +83,7 @@ exports.getAllOrders = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/orders/:id - Get a single order
- */
+// GET /api/orders/:id
 exports.getOrderById = async (req, res, next) => {
   try {
     const order = await Order.findById(req.params.id)
@@ -110,7 +98,7 @@ exports.getOrderById = async (req, res, next) => {
       });
     }
 
-    // Check if user has permission to view this order
+    // Check permission to view order
     if (req.user.role === 'client' && order.userId._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         error: {
@@ -129,9 +117,7 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 
-/**
- * PUT /api/orders/:id/status - Update order status (Admin/Superadmin only)
- */
+// PUT /api/orders/:id/status (Admin only)
 exports.updateOrderStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
@@ -171,9 +157,7 @@ exports.updateOrderStatus = async (req, res, next) => {
   }
 };
 
-/**
- * DELETE /api/orders/:id - Delete order (Superadmin only)
- */
+
 exports.deleteOrder = async (req, res, next) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);

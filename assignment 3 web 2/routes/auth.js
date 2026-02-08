@@ -27,6 +27,24 @@ const validateLogin = [
     .notEmpty().withMessage('Password is required')
 ];
 
+const validateVerification = [
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Please provide a valid email'),
+  body('code')
+    .trim()
+    .notEmpty().withMessage('Verification code is required')
+    .isLength({ min: 6, max: 6 }).withMessage('Verification code must be 6 digits')
+];
+
+const validateResendCode = [
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Please provide a valid email')
+];
+
 // Helper function to handle validation errors
 const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -43,6 +61,12 @@ const handleValidation = (req, res, next) => {
 
 // POST /api/auth/register - Register new user
 router.post('/register', validateRegistration, handleValidation, authController.register);
+
+// POST /api/auth/verify - Verify email with code
+router.post('/verify', validateVerification, handleValidation, authController.verifyEmail);
+
+// POST /api/auth/resend-code - Resend verification code
+router.post('/resend-code', validateResendCode, handleValidation, authController.resendVerificationCode);
 
 // POST /api/auth/login - Login user
 router.post('/login', validateLogin, handleValidation, authController.login);

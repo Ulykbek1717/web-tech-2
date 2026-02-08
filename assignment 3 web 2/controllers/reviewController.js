@@ -1,9 +1,7 @@
 const Review = require('../models/Review');
 const Product = require('../models/Product');
 
-/**
- * GET /api/reviews - Get all reviews (optionally filtered by productId)
- */
+// GET /api/reviews
 exports.getAllReviews = async (req, res, next) => {
   try {
     const { productId } = req.query;
@@ -27,9 +25,7 @@ exports.getAllReviews = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/reviews/:id - Get a single review by ID
- */
+// GET /api/reviews/:id
 exports.getReviewById = async (req, res, next) => {
   try {
     const review = await Review.findById(req.params.id)
@@ -53,14 +49,12 @@ exports.getReviewById = async (req, res, next) => {
   }
 };
 
-/**
- * POST /api/reviews - Create a new review (Authenticated users)
- */
+// POST /api/reviews
 exports.createReview = async (req, res, next) => {
   try {
     const { productId, author, rating, comment, verified } = req.body;
     
-    // Check if product exists
+    // Verify product exists
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({
@@ -81,7 +75,7 @@ exports.createReview = async (req, res, next) => {
     
     const savedReview = await review.save();
     
-    // Update product ratings
+    // Update product rating stats
     const avgRating = await Review.getAverageRating(productId);
     await Product.findByIdAndUpdate(productId, {
       'ratings.average': avgRating,
@@ -109,9 +103,7 @@ exports.createReview = async (req, res, next) => {
   }
 };
 
-/**
- * PUT /api/reviews/:id - Update a review (Admin only)
- */
+// PUT /api/reviews/:id
 exports.updateReview = async (req, res, next) => {
   try {
     const { author, rating, comment, verified, helpful } = req.body;
@@ -140,7 +132,7 @@ exports.updateReview = async (req, res, next) => {
       });
     }
     
-    // Recalculate product ratings
+    // Recalculate product rating
     const avgRating = await Review.getAverageRating(review.productId);
     await Product.findByIdAndUpdate(review.productId, {
       'ratings.average': avgRating
@@ -167,9 +159,7 @@ exports.updateReview = async (req, res, next) => {
   }
 };
 
-/**
- * DELETE /api/reviews/:id - Delete a review (Admin only)
- */
+// DELETE /api/reviews/:id
 exports.deleteReview = async (req, res, next) => {
   try {
     const review = await Review.findByIdAndDelete(req.params.id);
@@ -183,7 +173,7 @@ exports.deleteReview = async (req, res, next) => {
       });
     }
     
-    // Recalculate product ratings
+    // Update product rating after deletion
     const avgRating = await Review.getAverageRating(review.productId);
     const reviewCount = await Review.countDocuments({ productId: review.productId });
     await Product.findByIdAndUpdate(review.productId, {

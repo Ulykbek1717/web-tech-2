@@ -1,25 +1,20 @@
 const Product = require('../models/Product');
 
-/**
- * GET /api/products - Retrieve all products
- */
+// GET /api/products
 exports.getAllProducts = async (req, res, next) => {
   try {
     const { category, sort, limit } = req.query;
     
-    // Build query
     let query = {};
     if (category) {
       query.category = category;
     }
     
-    // Build sort
-    let sortOption = { createdAt: -1 }; // Default: newest first
+    let sortOption = { createdAt: -1 };
     if (sort === 'price_asc') sortOption = { price: 1 };
     if (sort === 'price_desc') sortOption = { price: -1 };
     if (sort === 'name') sortOption = { name: 1 };
     
-    // Execute query
     let productsQuery = Product.find(query).sort(sortOption);
     
     if (limit) {
@@ -38,9 +33,7 @@ exports.getAllProducts = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/products/:id - Retrieve a single product by ID
- */
+// GET /api/products/:id
 exports.getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -63,9 +56,7 @@ exports.getProductById = async (req, res, next) => {
   }
 };
 
-/**
- * POST /api/products - Create a new product (Admin only)
- */
+// POST /api/products (Admin only)
 exports.createProduct = async (req, res, next) => {
   try {
     const { name, price, description, category, imageUrl, stock, featured } = req.body;
@@ -103,9 +94,7 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
-/**
- * PUT /api/products/:id - Update an existing product (Admin only)
- */
+// PUT /api/products/:id (Admin only)
 exports.updateProduct = async (req, res, next) => {
   try {
     const { name, price, description, category, imageUrl, stock, featured } = req.body;
@@ -122,8 +111,8 @@ exports.updateProduct = async (req, res, next) => {
         featured
       },
       {
-        new: true, // Return updated document
-        runValidators: true // Run schema validators
+        new: true,
+        runValidators: true
       }
     );
     
@@ -157,9 +146,7 @@ exports.updateProduct = async (req, res, next) => {
   }
 };
 
-/**
- * DELETE /api/products/:id - Delete a product (Admin only)
- */
+// DELETE /api/products/:id (Admin only)
 exports.deleteProduct = async (req, res, next) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);

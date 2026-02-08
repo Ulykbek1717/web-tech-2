@@ -1,7 +1,4 @@
-/**
- * Middleware to check if user has required role(s)
- * Usage: authorize('admin'), authorize(['admin', 'superadmin'])
- */
+// Check if user has required role(s)
 const authorize = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {

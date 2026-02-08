@@ -1,7 +1,7 @@
 (function () {
   const CART_KEY = 'shop_cart';
 
-  // CART LOGIC 
+  // Get cart from localStorage
   function getCart() {
     const raw = localStorage.getItem(CART_KEY);
     if (raw) {
@@ -14,6 +14,7 @@
     return [];
   }
 
+  // Save cart and update badge
   function saveCart(items) {
     localStorage.setItem(CART_KEY, JSON.stringify(items));
     updateCartCount();
@@ -73,7 +74,7 @@
     saveCart(cart);
   }
 
-  // NAVBAR + YEAR
+  // Initialize navigation
   function initNav() {
     const path = location.pathname.split('/').pop() || 'index.html';
     const links = document.querySelectorAll('.navbar .nav-link');
@@ -91,12 +92,12 @@
     }
   }
 
-  // PRODUCTS PAGE
+  // Load and display products
   async function initProductsPage() {
     if ($('#products-grid').length === 0) return;
 
     try {
-      // Fetch products from API
+      // Fetch from API
       const response = await fetch('/api/products');
       const result = await response.json();
       
@@ -108,19 +109,22 @@
 
       const products = result.data;
       
-      // Render products
       const grid = $('#products-grid');
       grid.empty();
       
       products.forEach(product => {
-        // Check if user is admin or superadmin
+        // Check if admin/superadmin
         const user = Auth.getUser();
         const isAdmin = user && (user.role === 'admin' || user.role === 'superadmin');
         
         const actionButton = isAdmin 
-          ? `<div class="alert alert-info mb-0">
+          ? `<div class="alert alert-info mb-2">
                <strong>Stock:</strong> ${product.stock || 0} units
-             </div>`
+             </div>
+             <button class="btn btn-primary w-100 btn-edit-product" 
+               data-id="${product._id}">
+               Edit Product
+             </button>`
           : `<button class="btn btn-primary w-100 add-to-cart" 
                data-id="${product._id}"
                data-name="${product.name}"
@@ -196,7 +200,78 @@
         }
       });
     });
+
+    // Edit product (Admin only)
+    $(document).on('click', '.btn-edit-product', async function () {
+      const productId = $(this).data('id');
+      await editProductInCatalog(productId);
+    });
   }
+
+  // Edit product function (for catalog page)
+  async function editProductInCatalog(id) {
+    try {
+      const response = await Auth.request(`/api/products/${id}`);
+      const result = await response.json();
+      
+      if (!response.ok) throw new Error('Failed to load product');
+      
+      const product = result.data;
+      
+      // Fill form with product data
+      $('#editProductId').val(product._id);
+      $('#editName').val(product.name);
+      $('#editPrice').val(product.price);
+      $('#editDescription').val(product.description);
+      $('#editCategory').val(product.category);
+      $('#editImageUrl').val(product.imageUrl || '');
+      $('#editStock').val(product.stock);
+      
+      // Show modal
+      $('#editProductModal').modal('show');
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  }
+
+  // Update product function
+  async function updateProductInCatalog(e) {
+    e.preventDefault();
+    
+    const id = $('#editProductId').val();
+    const data = {
+      name: $('#editName').val(),
+      price: parseFloat($('#editPrice').val()),
+      description: $('#editDescription').val(),
+      category: $('#editCategory').val(),
+      imageUrl: $('#editImageUrl').val(),
+      stock: parseInt($('#editStock').val()) || 0
+    };
+    
+    try {
+      const response = await Auth.request(`/api/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Failed to update product');
+      }
+      
+      alert('Product updated successfully!');
+      $('#editProductModal').modal('hide');
+      
+      // Reload products
+      await initProductsPage();
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  }
+
+  // Make function globally available
+  window.updateProductInCatalog = updateProductInCatalog;
 
   // CART PAGE
   function renderCart() {
