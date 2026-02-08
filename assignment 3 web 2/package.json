@@ -16,7 +16,7 @@
   "author": "Ulykbek",
   "license": "ISC",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.x"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
