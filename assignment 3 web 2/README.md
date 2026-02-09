@@ -23,16 +23,16 @@ npm start
 
 Visit: `http://localhost:3000`
 
-## 🚀 Deployment
+##  Deployment
 
 **Live Demo:** `https://your-app-name.onrender.com` (after deployment)
 
 ### Deploy to Render
 
 See detailed deployment instructions:
-- 📖 [Full Deployment Guide](./DEPLOYMENT_GUIDE.md) - Complete step-by-step guide in Russian
-- ⚡ [Quick Deploy Guide](./QUICK_DEPLOY.md) - Quick reference
-- 🐳 [Docker Deploy Guide](./DOCKER_DEPLOY.md) - Deploy with Docker (optional)
+-  [Full Deployment Guide](./DEPLOYMENT_GUIDE.md) - Complete step-by-step guide in Russian
+-  [Quick Deploy Guide](./QUICK_DEPLOY.md) - Quick reference
+-  [Docker Deploy Guide](./DOCKER_DEPLOY.md) - Deploy with Docker (optional)
 
 **Quick steps:**
 1. Set up MongoDB Atlas (free tier)
